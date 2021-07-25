@@ -1,15 +1,12 @@
-import React from 'react';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
+import { Button, Paper } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FileUploadBox from './FileUploadBox';
-import { AccordionActions, Button, Divider } from '@material-ui/core';
-import FileUploadAccordion from './accordion/FileUploadAccordion';
-import ComparisonResultsAccordion from './accordion/ComparisonResultsAccordion';
-import UnmatchedReportAccordion from './accordion/UnmatchedReportAccordion';
+import React from 'react';
+import Accordion from './Accordion';
+import FileSummaryBox from './steps/FileSummaryBox';
+import FileUploadBox from './steps/FileUploadBox';
+import alpha from '../fixtures/alpha.json';
+import UnmatchedReportTable from './steps/UnmatchedReportTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,14 +20,20 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function ReconAccordion() {
+export default function Reconciliation() {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <FileUploadAccordion />
-      <ComparisonResultsAccordion />
-      <UnmatchedReportAccordion />
+      <Accordion defaultExpanded title="Select files to compare" actions={<Button variant="contained" color="primary">Compare</Button>}>
+        <FileUploadBox disabled />
+      </Accordion>
+      <Accordion title="Comparison results" actions={<Button variant="contained" color="primary">Unmatched Report</Button>}>
+        <FileSummaryBox left={alpha.left} right={alpha.right}/>
+      </Accordion>
+      <Accordion title="Unmatched report">
+        <UnmatchedReportTable left={alpha.left} right={alpha.right}/>
+      </Accordion>
     </div>
   );
 }

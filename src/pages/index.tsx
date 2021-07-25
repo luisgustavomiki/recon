@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import ReconAccordion from '../components/Reconciliation'
+import Reconciliation from '../components/Reconciliation'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <ReconAccordion />
+        <Reconciliation />
       </main>
     </div>
   )

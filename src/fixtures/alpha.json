@@ -1,0 +1,52 @@
+{
+  "left": {
+    "name": "foo.csv",
+    "entries": [
+      {
+        "date": "2020-11-20",
+        "reference": "bar",
+        "amount": "USD 132.21"
+      },
+      {
+        "date": "2020-11-20",
+        "reference": "bar",
+        "amount": "USD 132.17"
+      },
+      {
+        "date": "2020-11-20",
+        "reference": "baz",
+        "amount": "USD 532.72"
+      },
+      {
+        "date": "2020-11-20",
+        "reference": "baz",
+        "amount": "USD 30.00"
+      }
+    ],
+    "summary": {
+      "totalRecords": 4,
+      "matchingRecords": 1,
+      "unmatchedRecords": 3
+    }
+  },
+  "right": {
+    "name": "bar.csv",
+    "entries": [
+      {
+        "date": "2020-11-20",
+        "reference": "bar",
+        "amount": "USD 132.21"
+      },
+      {
+        "date": "2020-11-20",
+        "reference": "bar",
+        "amount": "USD 333.33"
+      }
+    ],
+    "summary": {
+      "totalRecords": 2,
+      "matchingRecords": 1,
+      "unmatchedRecords": 1
+    }
+  }
+}
