@@ -1,6 +1,19 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { createStyles, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@material-ui/core';
 import React from 'react';
 import { ReconFile } from '../../interfaces/reconFile';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+    },
+    table: {
+      '& .MuiTableCell-head': {
+        fontWeight: 'bold'
+      },
+    },
+  }),
+);
 
 interface Props {
   left: ReconFile;
@@ -8,6 +21,8 @@ interface Props {
 }
 
 export default function UnmatchedReportTable({ left, right }: Props) {
+  const classes = useStyles();
+
   const maxEntries = Math.max(left.entries.length, right.entries.length);
   const pairedEntries = Array(maxEntries).fill(1).map((_, index) => [left.entries[index], right.entries[index]]);
   const rows = pairedEntries.map(([left, right], index) => (
@@ -22,9 +37,9 @@ export default function UnmatchedReportTable({ left, right }: Props) {
   ));
 
   return (
-    <>
+    <div className={classes.root}>
       <TableContainer component={Paper}>
-        <Table>
+        <Table className={classes.table}>
           <TableHead>
             <TableRow>
               <TableCell align="center" colSpan={3}>
@@ -48,6 +63,6 @@ export default function UnmatchedReportTable({ left, right }: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+    </div>
   );
 }

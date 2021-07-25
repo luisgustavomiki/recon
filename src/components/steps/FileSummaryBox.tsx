@@ -8,18 +8,15 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-
-      '& .MuiTextField-root': {
-        margin: theme.spacing(1),
-        width: '25ch',
-      },
     },
     paper: {
       padding: theme.spacing(2),
-      color: theme.palette.text.secondary,
-    },
-    table: {
-      
+      textAlign: 'center',
+
+      '& .MuiTypography-root': {
+        fontWeight: 'bold',
+        margin: theme.spacing(1),
+      },
     },
   }),
 );
@@ -37,13 +34,13 @@ export default function FileSummaryBox({ left, right }: Props) {
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <Paper variant="outlined" className={classes.paper}>
-            <Typography variant="h4">{left.name}</Typography>
+            <Typography>{left.name}</Typography>
             <FileSummaryCard {...left.summary} />
           </Paper>
         </Grid>
         <Grid item xs={6}>
           <Paper variant="outlined" className={classes.paper}>
-            <Typography variant="h4">{right.name}</Typography>
+            <Typography>{right.name}</Typography>
             <FileSummaryCard {...right.summary} />
           </Paper>
         </Grid>

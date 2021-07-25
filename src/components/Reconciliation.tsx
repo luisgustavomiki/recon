@@ -1,11 +1,11 @@
-import { Button, Paper } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import React from 'react';
+import React, { useState } from 'react';
+import alpha from '../fixtures/alpha.json';
+import { ReconReport } from '../interfaces/reconReport';
 import Accordion from './Accordion';
 import FileSummaryBox from './steps/FileSummaryBox';
 import FileUploadBox from './steps/FileUploadBox';
-import alpha from '../fixtures/alpha.json';
 import UnmatchedReportTable from './steps/UnmatchedReportTable';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -13,25 +13,23 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: '100%',
     },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
-    },
   }),
 );
 
 export default function Reconciliation() {
   const classes = useStyles();
 
+  const [report, setReport] = useState<ReconReport | undefined>();
+
   return (
     <div className={classes.root}>
-      <Accordion defaultExpanded title="Select files to compare" actions={<Button variant="contained" color="primary">Compare</Button>}>
-        <FileUploadBox disabled />
+      <Accordion disabled={!!report} expanded={!report} title="Select files to compare">
+        <FileUploadBox disabled={!!report} setReport={setReport} />
       </Accordion>
-      <Accordion title="Comparison results" actions={<Button variant="contained" color="primary">Unmatched Report</Button>}>
+      <Accordion disabled={!report} expanded={!!report} title="Comparison results">
         <FileSummaryBox left={alpha.left} right={alpha.right}/>
       </Accordion>
-      <Accordion title="Unmatched report">
+      <Accordion disabled={!report} expanded={!!report} title="Unmatched report">
         <UnmatchedReportTable left={alpha.left} right={alpha.right}/>
       </Accordion>
     </div>
