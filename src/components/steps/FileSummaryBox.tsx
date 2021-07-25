@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  left: ReconFile;
-  right: ReconFile;
+  left?: ReconFile;
+  right?: ReconFile;
 }
 
 export default function FileSummaryBox({ left, right }: Props) {
@@ -34,14 +34,14 @@ export default function FileSummaryBox({ left, right }: Props) {
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <Paper variant="outlined" className={classes.paper}>
-            <Typography>{left.name}</Typography>
-            <FileSummaryCard {...left.summary} />
+            <Typography>{left?.name}</Typography>
+            { left && <FileSummaryCard {...left.summary} />}
           </Paper>
         </Grid>
         <Grid item xs={6}>
           <Paper variant="outlined" className={classes.paper}>
-            <Typography>{right.name}</Typography>
-            <FileSummaryCard {...right.summary} />
+            <Typography>{right?.name}</Typography>
+            { right && <FileSummaryCard {...right.summary} />}
           </Paper>
         </Grid>
       </Grid>

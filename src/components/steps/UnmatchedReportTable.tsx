@@ -1,13 +1,17 @@
 import { createStyles, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@material-ui/core';
 import React from 'react';
 import { ReconFile } from '../../interfaces/reconFile';
+import { DataGrid, GridColDef } from '@material-ui/data-grid';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
+      
+      
     },
     table: {
+      
       '& .MuiTableCell-head': {
         fontWeight: 'bold'
       },
@@ -15,54 +19,71 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const columns: GridColDef[] = [
+  {
+    field: 'leftDate',
+    headerName: 'Date (1)',
+    width: 150,
+  },
+  {
+    field: 'leftReference',
+    headerName: 'Reference (1)',
+    width: 150,
+  },
+  {
+    field: 'leftAmount',
+    headerName: 'Amount (1)',
+    width: 110,
+  },
+  {
+    field: 'rightDate',
+    headerName: 'Date (2)',
+    width: 150,
+  },
+  {
+    field: 'rightReference',
+    headerName: 'Reference (2)',
+    width: 150,
+  },
+  {
+    field: 'rightAmount',
+    headerName: 'Amount (2)',
+    width: 110,
+  },
+];
+
 interface Props {
-  left: ReconFile;
-  right: ReconFile;
+  left?: ReconFile;
+  right?: ReconFile;
 }
 
 export default function UnmatchedReportTable({ left, right }: Props) {
   const classes = useStyles();
 
+  if (!left || !right) {
+    return (
+      <div className={classes.root}></div>
+    );
+  }
+
   const maxEntries = Math.max(left.entries.length, right.entries.length);
-  const pairedEntries = Array(maxEntries).fill(1).map((_, index) => [left.entries[index], right.entries[index]]);
-  const rows = pairedEntries.map(([left, right], index) => (
-    <TableRow key={index}>
-      <TableCell>{left?.date}</TableCell>
-      <TableCell>{left?.reference}</TableCell>
-      <TableCell>{left?.amount}</TableCell>
-      <TableCell>{right?.date}</TableCell>
-      <TableCell>{right?.reference}</TableCell>
-      <TableCell>{right?.amount}</TableCell>
-    </TableRow>
-  ));
+  const pairedEntries = Array(maxEntries).fill(1).map((_, index) => ({
+                id: index,
+          leftDate: left.entries[index]?.date,
+     leftReference: left.entries[index]?.reference,
+        leftAmount: left.entries[index]?.amount,
+         rightDate: right.entries[index]?.date, 
+    rightReference: right.entries[index]?.reference,  
+       rightAmount: right.entries[index]?.amount, 
+  }));
 
   return (
-    <div className={classes.root}>
-      <TableContainer component={Paper}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" colSpan={3}>
-                {left.name}
-              </TableCell>
-              <TableCell align="center" colSpan={3}>
-                {right.name}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Reference</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Reference</TableCell>
-              <TableCell>Amount</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={pairedEntries}
+        columns={columns}
+        pageSize={5}
+      />
     </div>
   );
 }

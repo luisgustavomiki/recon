@@ -1,7 +1,5 @@
-import { Button } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useState } from 'react';
-import alpha from '../fixtures/alpha.json';
 import { ReconReport } from '../interfaces/reconReport';
 import Accordion from './Accordion';
 import FileSummaryBox from './steps/FileSummaryBox';
@@ -27,10 +25,10 @@ export default function Reconciliation() {
         <FileUploadBox disabled={!!report} setReport={setReport} />
       </Accordion>
       <Accordion disabled={!report} expanded={!!report} title="Comparison results">
-        <FileSummaryBox left={alpha.left} right={alpha.right}/>
+        <FileSummaryBox left={report?.left} right={report?.right}/>
       </Accordion>
       <Accordion disabled={!report} expanded={!!report} title="Unmatched report">
-        <UnmatchedReportTable left={alpha.left} right={alpha.right}/>
+        <UnmatchedReportTable left={report?.left} right={report?.right}/>
       </Accordion>
     </div>
   );

@@ -53,7 +53,7 @@ export default function FileUploadBox({ disabled, setReport }: Props) {
 
     try {
       const res = await axios.post(
-        "/api/hello",
+        "/api/match",
         formData
       );
       console.log(res);

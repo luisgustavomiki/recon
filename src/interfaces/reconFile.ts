@@ -6,4 +6,3 @@ export interface ReconFile {
   entries: Array<Entry>;
   summary: ReconSummary;
 }
-
