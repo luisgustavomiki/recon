@@ -1,14 +1,13 @@
-import { Button, FormGroup, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
 import { ReconReport } from '../../interfaces/reconReport';
-import { ReconSummary } from '../../interfaces/reconSummary';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
+      width: 1000,
 
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
@@ -53,7 +52,7 @@ export default function FileUploadBox({ disabled, setReport }: Props) {
 
     try {
       const res = await axios.post(
-        "/api/match",
+        "/api/report",
         formData
       );
       console.log(res);

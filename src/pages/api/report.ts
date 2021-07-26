@@ -6,6 +6,7 @@ import nextConnect from 'next-connect';
 import { Entry } from '../../interfaces/entry';
 import { ReconReport } from '../../interfaces/reconReport';
 import { match } from '../../logic/match';
+import { summarize } from '../../logic/summarize';
 import middlewares from '../../middlewares';
 
 const handler = nextConnect();
@@ -15,7 +16,7 @@ async function handleFile(file: formidable.File): Promise<Array<Record<string, s
 	return new Promise((resolve, reject) => {
 		parse(fs.readFileSync(file.path), {
 			columns: true,
-			ignore_last_delimiters:true
+			ignore_last_delimiters: true,
 		}, function(err, output){
 			if (err) {
 				reject(err);
@@ -30,10 +31,14 @@ function transformEntries(data: Array<Record<string, string>>): Array<Entry> {
 	return data.map(entry => (
 		{ 
 			date: entry['TransactionDate'], 
-			reference: entry['WalletReference'], 
+			reference: removeTrailingComma(entry['WalletReference']), 
 			amount: entry['TransactionAmount'],
 		}
 	));
+}
+
+function removeTrailingComma(text: string): string {
+	return text.endsWith(',') ? text.substr(0, text.length - 1) : text;
 }
 
 handler.post(async(req: NextApiRequest & { files: formidable.Files }, res: NextApiResponse<ReconReport | { error: string }>) => {
@@ -49,19 +54,21 @@ handler.post(async(req: NextApiRequest & { files: formidable.Files }, res: NextA
 		const leftEntries = transformEntries(leftRecords);
 		const rightEntries = transformEntries(rightRecords);
 
-		const result = match({ left: leftEntries, right: rightEntries });
-		console.log(result);
+		const summary = summarize({ left: leftEntries, right: rightEntries });
+		const details = match({ left: leftEntries, right: rightEntries });
 
 		const report = {
 			left: {
 				name: leftFile.name as string,
 				entries: leftEntries,
-				summary: result.left,
+				summary: summary.left,
+				details: details.left,
 			},
 			right: {
 				name: rightFile.name as string,
 				entries: rightEntries,
-				summary: result.right,
+				summary: summary.right,
+				details: details.right,
 			}
 		}
 		

@@ -7,7 +7,7 @@ import FileSummaryCard from './FileSummaryCard';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
+      width: 1000,
     },
     paper: {
       padding: theme.spacing(2),

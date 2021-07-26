@@ -2,6 +2,7 @@ import { createStyles, makeStyles, Paper, Table, TableBody, TableCell, TableCont
 import React from 'react';
 import { ReconFile } from '../../interfaces/reconFile';
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
+import { Entry } from '../../interfaces/entry';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -21,34 +22,34 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const columns: GridColDef[] = [
   {
-    field: 'leftDate',
-    headerName: 'Date (1)',
-    width: 150,
-  },
-  {
     field: 'leftReference',
     headerName: 'Reference (1)',
-    width: 150,
+    width: 200,
+  },
+  {
+    field: 'leftDate',
+    headerName: 'Date (1)',
+    width: 130,
   },
   {
     field: 'leftAmount',
     headerName: 'Amount (1)',
-    width: 110,
-  },
-  {
-    field: 'rightDate',
-    headerName: 'Date (2)',
     width: 150,
   },
   {
     field: 'rightReference',
     headerName: 'Reference (2)',
-    width: 150,
+    width: 200,
+  },
+  {
+    field: 'rightDate',
+    headerName: 'Date (2)',
+    width: 130,
   },
   {
     field: 'rightAmount',
     headerName: 'Amount (2)',
-    width: 110,
+    width: 150,
   },
 ];
 
@@ -66,23 +67,37 @@ export default function UnmatchedReportTable({ left, right }: Props) {
     );
   }
 
-  const maxEntries = Math.max(left.entries.length, right.entries.length);
-  const pairedEntries = Array(maxEntries).fill(1).map((_, index) => ({
-                id: index,
-          leftDate: left.entries[index]?.date,
-     leftReference: left.entries[index]?.reference,
-        leftAmount: left.entries[index]?.amount,
-         rightDate: right.entries[index]?.date, 
-    rightReference: right.entries[index]?.reference,  
-       rightAmount: right.entries[index]?.amount, 
-  }));
+  const leftEntries = left.details.unmatchedRecords;
+  const rightEntries = right.details.unmatchedRecords;
+
+  const unique = Array.from(new Set([...leftEntries.map(e => e.reference), ...rightEntries.map(e => e.reference)])).sort();
+
+  function findByReference(entries: Array<Entry>, reference: string): Entry | undefined {
+    return entries.find(e => e.reference === reference);
+  }
+
+  const pairedEntries = unique.map(reference => {
+    const l = findByReference(leftEntries, reference);
+    const r = findByReference(rightEntries, reference);
+
+    return {
+                id: reference,
+          leftDate: l?.date ?? '--MISSING--',
+     leftReference: l ? reference : '--MISSING--',
+        leftAmount: l?.amount ?? '--MISSING--',
+         rightDate: r?.date ?? '--MISSING--',
+    rightReference: r ? reference : '--MISSING--',
+       rightAmount: r?.amount ?? '--MISSING--',
+    };
+  });
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 300, width: 1000 }}>
       <DataGrid
         rows={pairedEntries}
         columns={columns}
-        pageSize={5}
+        pageSize={20}
+        rowHeight={25}
       />
     </div>
   );
